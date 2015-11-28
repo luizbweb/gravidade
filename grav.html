@@ -1,6 +1,6 @@
 <! DOCTYPE html>
 <!-- A Executar:
-    Adicionar aceleração a bola.
+    Adicionar aceleração a bola. - ok
     Fazer ela se mover na horizontal.
     Fazer ela partir da primeira plataforma
     criar 2 plataformas
@@ -18,24 +18,28 @@
         </style>
     </head>
     <body onload="inicializar()">
-        <canvas id="canvas" width="600" height="460">
+        <canvas id="canvas" width="900" height="460">
             Navgador não suporta HTML 5
         </canvas>
         <script type="text/javascript">
-            var barraAltura, barraLargura, jogadorPosicaoX, bolaDiametro, bolaPosX, bolaPosY, velocidadeBola, pontosJogador, colisao;
+            var barraAltura, barraLargura, jogadorPosicaoX, bolaDiametro, bolaPosX, bolaPosY, velocidadeBolaY, velocidadeBolaX, pontosJogador, colisao, t, g, pare;
             
             
             function inicializar() {
+                t = 1;
+                g = 9.8;
+                pare = 1;
                 barraAltura = 15;
                 barraLargura = 90;
                 
                 jogadorPosicaoX = (canvas.width - barraLargura) / 2;
                 velocidadeJogador = 20;
                 
-                bolaDiametro = 10;
-                bolaPosX = canvas.width / 2;
-                bolaPosY = -10;
-                velocidadeBola = 10;
+                bolaDiametro = 6;
+                bolaPosX = 40;
+                bolaPosY = 350;
+                velocidadeBolaY = -12;
+                velocidadeBolaX = 3.5;
                 
                 pontosJogador = 0;
                 colisao = false;
@@ -61,6 +65,14 @@
                         jogadorPosicaoX += velocidadeJogador;
                     }
                 }
+                if(e.keyCode == 32) {
+                    t = 1;
+                    bolaPosX = 40;
+                    bolaPosY = 350;
+                    velocidadeBolaY = -12;
+                    velocidadeBolaX = 3.5;
+                    pare = 1;
+                }
                 context.fillRect(jogadorPosicaoX, canvas.height - barraAltura, barraLargura, barraAltura);
                 
             }
@@ -74,12 +86,15 @@
                 context.fill();
                 
                 if (bolaPosY <= canvas.height) {
-                    bolaPosY += velocidadeBola;
+                    t += 0.030;
+                    bolaPosY += (velocidadeBolaY*t + g * t * t/2) * pare;
+                    bolaPosX += (velocidadeBolaX*t) * pare;
                 }
                 else {
                     bolaPosX = Math.random() * 600;
                     bolaPosY = -10;
                     colisao = false;
+                    pare = 0;
                 }
                 
                 if ((bolaPosX > jogadorPosicaoX && bolaPosX < jogadorPosicaoX + barraLargura) && bolaPosY >= canvas.height - barraAltura && colisao == false) {
@@ -88,6 +103,8 @@
                 }
                 context.font = "32pt Tahoma";
                 context.fillText(pontosJogador, canvas.width - 70, 50);
+            }
+                function continua() {
                 
             }
             
