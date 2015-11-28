@@ -13,8 +13,5 @@ var relogio = setInterval(moveBala, 20);
 function paraBala() {
      clearInterval(relogio);
  }
-<<<<<<< HEAD
 document.querySelector('#parar').onclick = paraBala;
-=======
-document.querySelector('#parar').onclick = paraBala;
->>>>>>> 34ced9944da2b01b3b023121569472f40b169287
+

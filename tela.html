@@ -1,19 +1,29 @@
 <html>
     <head>
-        <title>Jogo usando Canvas</title>
+        <title>Exemplo Jogo usando Canvas</title>
     </head>
     <script>
-        window.onload = function() {
+        window.onload = function desenha() {
             var canvas = document.getElementById("canvas");
             var ctx = canvas.getContext("2d");
+            var circ = canvas.getContext("2d");
             var img = document.getElementById("scream");
             ctx.drawImage(img, 10, 10);
+            ctx.font = "30px Arial";
+            ctx.fillText("Jogo da Gravidade", 300, 50);
+            circ.beginPath();
+            circ.arc(300, 100, 10, 0, 2*Math.PI);
+            circ.fillStyle = "#000000";
+            circ.fill();
+            
         };
+        
+        
         
     </script>
     <body>
         <canvas id="canvas" width="900px" height="400px" style="background-color: #ccc;">
-        
+            Navegador não suporta HTML 5
         </canvas>
             <img id="scream" src="http://www.w3schools.com/canvas/pic_the_scream.jpg" style="display:none;" />
     </body>
