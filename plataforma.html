@@ -13,7 +13,7 @@
             Navgador não suporta HTML 5
         </canvas>
         <script type="text/javascript">
-            var barraAltura, barraLargura, jogadorPosicaoX;
+            var barraAltura, barraLargura, jogadorPosicaoX, bolaDiametro, bolaPosX, bolaPosY, velocidadeBola, pontosJogador, colisao;
             
             
             function inicializar() {
@@ -22,6 +22,14 @@
                 
                 jogadorPosicaoX = (canvas.width - barraLargura) / 2;
                 velocidadeJogador = 20;
+                
+                bolaDiametro = 10;
+                bolaPosX = canvas.width / 2;
+                bolaPosY = -10;
+                velocidadeBola = 10;
+                
+                pontosJogador = 0;
+                colisao = false;
                 
                 canvas = document.getElementById("canvas");
                 context = canvas.getContext("2d");
@@ -52,6 +60,25 @@
                 context.clearRect(0, 0, canvas.width, canvas.height);
                 
                 context.fillRect(jogadorPosicaoX, canvas.height - barraAltura, barraLargura, barraAltura);
+                context.beginPath();
+                context.arc(bolaPosX, bolaPosY, bolaDiametro, 0, Math.PI * 2, true);
+                context.fill();
+                
+                if (bolaPosY <= canvas.height) {
+                    bolaPosY += velocidadeBola;
+                }
+                else {
+                    bolaPosX = Math.random() * 600;
+                    bolaPosY = -10;
+                    colisao = false;
+                }
+                
+                if ((bolaPosX > jogadorPosicaoX && bolaPosX < jogadorPosicaoX + barraLargura) && bolaPosY >= canvas.height - barraAltura && colisao == false) {
+                    pontosJogador++;
+                    colisao = true;
+                }
+                context.font = "32pt Tahoma";
+                context.fillText(pontosJogador, canvas.width - 70, 50);
                 
             }
             
