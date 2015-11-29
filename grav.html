@@ -5,11 +5,12 @@
     Fazer ela partir da primeira plataforma - OK
     criar 2 plataformas - OK
     Mudar angulo de lançamento.
-        tg a = Vy / Vx
-        Vy = Vx * tg a
-        Faça tudo em relação ao módulo da velocidade.
-        
-    detectar a colisao.
+        Faça tudo em relação ao módulo da velocidade (velocidadeBola).
+        Vx = V * cos(a)
+        Vy = V * sin(a)
+    detectar a colisao - OK
+    Acrescentar segundo jogador.
+    Adiconar movimento aos jogadores
     Adiconar cenarios.
 -->
     
@@ -27,43 +28,73 @@
             Navgador não suporta HTML 5
         </canvas>
         <script type="text/javascript">
-            var barraAltura, barraLargura, jogadorPosicaoX, bolaDiametro, bolaPosX, bolaPosY, velocidadeBolaY, velocidadeBolaX, velocidadeBola, pontosJogador, colisao, t, g, pare, alfa;
+            var barraAltura, barraLargura, jogadorPosicaoX, inimigoPosicaoX, bolaDiametro, bolaPosX, bolaPosX2, bolaPosY, bolaPosY2, velocidadeBolaY, velocidadeBolaY2, velocidadeBolaX, velocidadeBolaX2, velocidadeBola, velocidadeBola2, pontosJogador, pontosJogador2, colisao, colisao2, t, t2, g, pare, pare2, alfa, alfa2;
             
             
             function inicializar() {
                 t = 1;
+                t2 = 1;
                 g = 9.8;
                 pare = 0;
+                pare2 = 0;
                 barraAltura = 15;
                 barraLargura = 90;
+                barraPosicaoY = 100;
                 
-                jogadorPosicaoX = 10;
+                jogadorPosicaoX = 0;
                 inimigoPosicaoX = canvas.width - barraLargura;
                 velocidadeJogador = 20;
-                
                 bolaDiametro = 6;
+                
+                // Dados do Jogador
                 bolaPosX = 50;
-                bolaPosY = 350;
+                bolaPosY = 300;
                 velocidadeBolaY = -12.0;
                 velocidadeBolaX = 3.5;
                 velocidadeBola = 15;
-                
                 pontosJogador = 0;
                 colisao = false;
-                
                 alfa = Math.PI/180;
+                
+                // Dados do Inimigo:
+                bolaPosX2 = canvas.width - 50;
+                bolaPosY2 = 300;
+                velocidadeBolaY2 = -12.0;
+                velocidadeBolaX2 = 3.5;
+                velocidadeBola2 = 15;
+                pontosJogador2 = 0;
+                colisao2 = false;
+                alfa2 = Math.PI/180;
                 
                 canvas = document.getElementById("canvas");
                 context = canvas.getContext("2d");
                 
-                context.fillRect(jogadorPosicaoX, canvas.height - barraAltura, barraLargura, barraAltura);
+                context.fillRect(jogadorPosicaoX, canvas.height - barraPosicaoY, barraLargura, barraAltura);
                 document.addEventListener('keydown', keyDown);
                 setInterval(gameLoop, 30);
                 
                 
             }
             
+            // Ações do Jogador:
+            // 38 - UP; 40 - Down; 37 - Left; 39 - Right - 13 - Enter;
             function keyDown(e) {
+                // Movimento da Plataforma
+                 if(e.keyCode == 37) {
+                    if (jogadorPosicaoX > 0) {
+                        jogadorPosicaoX -= velocidadeJogador;
+                        bolaPosX = jogadorPosicaoX + 50;
+                    }
+                }
+                
+                if(e.keyCode == 39) {
+                    if (jogadorPosicaoX < ((canvas.width /2) - barraLargura)) {
+                        jogadorPosicaoX += velocidadeJogador;
+                        bolaPosX = jogadorPosicaoX + 50;
+                    }
+                }
+                
+                // Mudança do angulo
                 if(e.keyCode == 38) {
                     if ( alfa < 1.57) {
                         alfa += Math.PI/180;
@@ -79,28 +110,66 @@
                         velocidadeBolaY = - (Math.sin(alfa) * velocidadeBola);
                     }
                 }
-                if(e.keyCode == 32) {
-                    t = 1;
-                    bolaPosX = 50;
-                    bolaPosY = 350;
-                    pare = 1;
-                }
+                // Fogo!!!
                 if(e.keyCode == 13) {
-                    
                     t = 1;
-                    bolaPosX = 50;
-                    bolaPosY = 350;
+                    bolaPosX = jogadorPosicaoX + 50;
+                    bolaPosY = 300;
                     pare = 1;
+                }
+                
+                // Ações do Inimigo
+                // 65 - A; 87 - W; 68 - D; 83 - S; 32 - Space;
+                
+                // Movimento da Plataforma
+                if(e.keyCode == 65) {
+                    if (inimigoPosicaoX > ((canvas.width/2) + barraLargura)) {
+                        inimigoPosicaoX -= velocidadeJogador;
+                        bolaPosX2 = inimigoPosicaoX + 50;
+                    }
+                }
+                
+                if(e.keyCode == 68) {
+                    if (inimigoPosicaoX < (canvas.width - barraLargura)) {
+                        inimigoPosicaoX += velocidadeJogador;
+                        bolaPosX2 = inimigoPosicaoX + 50;
+                    }
+                }
+                // Mudanças de Angulo
+                 if(e.keyCode == 87) {
+                    if ( alfa2 < 1.57) {
+                        alfa2 += Math.PI/180;
+                        velocidadeBolaX2 = (Math.cos(alfa2) * velocidadeBola2);
+                        velocidadeBolaY2 = - (Math.sin(alfa2) * velocidadeBola2);
+                    }
+                }
+                
+                if(e.keyCode == 83) {
+                    if ( alfa2 > 0.1 ) {
+                        alfa2 -= Math.PI/180;
+                        velocidadeBolaX2 = (Math.cos(alfa2) * velocidadeBola2);
+                        velocidadeBolaY2 = - (Math.sin(alfa2) * velocidadeBola2);
+                    }
+                }
+                // Fogo!!!
+                if(e.keyCode == 32) {
+                    
+                    t2 = 1;
+                    bolaPosX2 = inimigoPosicaoX + 50;
+                    bolaPosY2 = 300;
+                    pare2 = 1;
                     
                 }
-                context.fillRect(jogadorPosicaoX, canvas.height - barraAltura, barraLargura, barraAltura);
+                context.fillRect(jogadorPosicaoX, canvas.height - barraPosicaoY, barraLargura, barraAltura);
+                context.fillRect(inimigoPosicaoX, canvas.height - barraPosicaoY, barraLargura, barraAltura);
             }
             
             function gameLoop() {
                 context.clearRect(0, 0, canvas.width, canvas.height);
                 
-                context.fillRect(jogadorPosicaoX, canvas.height - barraAltura, barraLargura, barraAltura);
-                context.fillRect(inimigoPosicaoX, canvas.height - barraAltura, barraLargura, barraAltura);
+                // Plataforma do Jogador
+                
+                context.fillRect(jogadorPosicaoX, canvas.height - barraPosicaoY, barraLargura, barraAltura);
                 context.beginPath();
                 context.arc(bolaPosX, bolaPosY, bolaDiametro, 0, Math.PI * 2, true);
                 context.fill();
@@ -109,32 +178,76 @@
                     t += 0.030;
                     bolaPosY += (velocidadeBolaY*t + g * t * t/2) * pare;
                     bolaPosX += (velocidadeBolaX*t) * pare;
+                    colisao = false;
                 }
                 else {
-                    bolaPosX = Math.random() * 600;
-                    bolaPosY = -10;
+                    // bolaPosX = Math.random() * 600;
+                    // bolaPosY = -10;
                     colisao = false;
                     pare = 0;
                 }
                 
-                if ((bolaPosX > jogadorPosicaoX && bolaPosX < jogadorPosicaoX + barraLargura) && bolaPosY >= canvas.height - barraAltura && colisao == false) {
+                if ((bolaPosX > inimigoPosicaoX && bolaPosX < inimigoPosicaoX + barraLargura) && bolaPosY >= canvas.height - barraPosicaoY && colisao == false) {
                     pontosJogador++;
                     colisao = true;
+                    pare = 0;
+                    t = 1;
+                    bolaPosX = jogadorPosicaoX + 40;
+                    bolaPosY = 350;
                 }
-                if ((bolaPosX > inimigoPosicaoX && bolaPosX < inimigoPosicaoX + barraLargura) && bolaPosY >= canvas.height - barraAltura && colisao == false) {
-                    pontosJogador++;
-                    colisao = true;
+
+                context.font = "14pt Tahoma";
+                context.fillText("Player 1: " + pontosJogador, 20, 50);
+                context.font = "12pt Tahoma";
+                context.fillText("Angulo: " + alfa, 20, 100);
+                context.font = "12pt Tahoma";
+                context.fillText("Seno: " + Math.sin(alfa), 20, 130);
+                context.font = "12pt Tahoma";
+                context.fillText("VelocidadeX: " + velocidadeBolaX, 20, 160);
+                context.font = "12pt Tahoma";
+                context.fillText("VelocidadeY: " + velocidadeBolaY, 20, 190);
+                
+                ///////////////////////////
+                // Plataforma do Inimigo //
+                ///////////////////////////
+                
+                context.fillRect(inimigoPosicaoX, canvas.height - barraPosicaoY, barraLargura, barraAltura);
+                context.beginPath();
+                context.arc(bolaPosX2, bolaPosY2, bolaDiametro, 0, Math.PI * 2, true);
+                context.fill();
+                
+                if (bolaPosY2 <= canvas.height) {
+                    t2 += 0.030;
+                    bolaPosY2 += (velocidadeBolaY2 * t2 + g * t2 * t2/2) * pare2;
+                    bolaPosX2 += - (velocidadeBolaX2 * t2) * pare2;
+                    colisao2 = false;
                 }
-                context.font = "32pt Tahoma";
-                context.fillText(pontosJogador, canvas.width - 70, 50);
-                context.font = "20pt Tahoma";
-                context.fillText("Angulo: " + alfa, canvas.width - 300, 100);
-                context.font = "20pt Tahoma";
-                context.fillText("Seno: " + Math.sin(alfa), canvas.width - 300, 130);
-                context.font = "20pt Tahoma";
-                context.fillText("VelocidadeX: " + velocidadeBolaX, canvas.width - 300, 160);
-                context.font = "20pt Tahoma";
-                context.fillText("VelocidadeY: " + velocidadeBolaY, canvas.width - 300, 190);
+                else {
+                    // bolaPosX2 = Math.random() * 600;
+                    // bolaPosY2 = -10;
+                    colisao2 = false;
+                    pare2 = 0;
+                }
+                
+                if ((bolaPosX2 > jogadorPosicaoX && bolaPosX2 < jogadorPosicaoX + barraLargura) && bolaPosY2 >= canvas.height - barraPosicaoY && colisao2 == false) {
+                    pontosJogador2++;
+                    colisao2 = true;
+                    pare2 = 0;
+                    t2 = 1;
+                    bolaPosX2 = inimigoPosicaoX + 40;
+                    bolaPosY2 = 350;
+                }
+                context.font = "14pt Tahoma";
+                context.fillText("Player 2: " + pontosJogador2, canvas.width - 250, 50);
+                context.font = "12pt Tahoma";
+                context.fillText("Angulo: " + alfa2, canvas.width - 250, 100);
+                context.font = "12pt Tahoma";
+                context.fillText("Seno: " + Math.sin(alfa2), canvas.width - 250, 130);
+                context.font = "12pt Tahoma";
+                context.fillText("VelocidadeX: " + velocidadeBolaX2, canvas.width - 250, 160);
+                context.font = "12pt Tahoma";
+                context.fillText("VelocidadeY: " + velocidadeBolaY2, canvas.width - 250, 190);
+                
             }
             
         </script>
