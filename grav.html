@@ -1,9 +1,14 @@
 <! DOCTYPE html>
 <!-- A Executar:
     Adicionar aceleração a bola. - ok
-    Fazer ela se mover na horizontal.
-    Fazer ela partir da primeira plataforma
-    criar 2 plataformas
+    Fazer ela se mover na horizontal. - OK
+    Fazer ela partir da primeira plataforma - OK
+    criar 2 plataformas - OK
+    Mudar angulo de lançamento.
+        tg a = Vy / Vx
+        Vy = Vx * tg a
+        Faça tudo em relação ao módulo da velocidade.
+        
     detectar a colisao.
     Adiconar cenarios.
 -->
@@ -22,65 +27,80 @@
             Navgador não suporta HTML 5
         </canvas>
         <script type="text/javascript">
-            var barraAltura, barraLargura, jogadorPosicaoX, bolaDiametro, bolaPosX, bolaPosY, velocidadeBolaY, velocidadeBolaX, pontosJogador, colisao, t, g, pare;
+            var barraAltura, barraLargura, jogadorPosicaoX, bolaDiametro, bolaPosX, bolaPosY, velocidadeBolaY, velocidadeBolaX, velocidadeBola, pontosJogador, colisao, t, g, pare, alfa;
             
             
             function inicializar() {
                 t = 1;
                 g = 9.8;
-                pare = 1;
+                pare = 0;
                 barraAltura = 15;
                 barraLargura = 90;
                 
-                jogadorPosicaoX = (canvas.width - barraLargura) / 2;
+                jogadorPosicaoX = 10;
+                inimigoPosicaoX = canvas.width - barraLargura;
                 velocidadeJogador = 20;
                 
                 bolaDiametro = 6;
-                bolaPosX = 40;
+                bolaPosX = 50;
                 bolaPosY = 350;
-                velocidadeBolaY = -12;
+                velocidadeBolaY = -12.0;
                 velocidadeBolaX = 3.5;
+                velocidadeBola = 15;
                 
                 pontosJogador = 0;
                 colisao = false;
+                
+                alfa = Math.PI/180;
                 
                 canvas = document.getElementById("canvas");
                 context = canvas.getContext("2d");
                 
                 context.fillRect(jogadorPosicaoX, canvas.height - barraAltura, barraLargura, barraAltura);
                 document.addEventListener('keydown', keyDown);
-                
                 setInterval(gameLoop, 30);
+                
+                
             }
             
             function keyDown(e) {
                 if(e.keyCode == 38) {
-                    if (jogadorPosicaoX > 0) {
-                        jogadorPosicaoX -= velocidadeJogador;
+                    if ( alfa < 1.57) {
+                        alfa += Math.PI/180;
+                        velocidadeBolaX = (Math.cos(alfa) * velocidadeBola);
+                        velocidadeBolaY = - (Math.sin(alfa) * velocidadeBola);
                     }
                 }
                 
                 if(e.keyCode == 40) {
-                    if (jogadorPosicaoX < (canvas.width - barraLargura)) {
-                        jogadorPosicaoX += velocidadeJogador;
+                    if ( alfa > 0.1 ) {
+                        alfa -= Math.PI/180;
+                        velocidadeBolaX = (Math.cos(alfa) * velocidadeBola);
+                        velocidadeBolaY = - (Math.sin(alfa) * velocidadeBola);
                     }
                 }
                 if(e.keyCode == 32) {
                     t = 1;
-                    bolaPosX = 40;
+                    bolaPosX = 50;
                     bolaPosY = 350;
-                    velocidadeBolaY = -12;
-                    velocidadeBolaX = 3.5;
                     pare = 1;
                 }
+                if(e.keyCode == 13) {
+                    
+                    t = 1;
+                    bolaPosX = 50;
+                    bolaPosY = 350;
+                    pare = 1;
+                    
+                }
                 context.fillRect(jogadorPosicaoX, canvas.height - barraAltura, barraLargura, barraAltura);
-                
             }
             
             function gameLoop() {
                 context.clearRect(0, 0, canvas.width, canvas.height);
                 
                 context.fillRect(jogadorPosicaoX, canvas.height - barraAltura, barraLargura, barraAltura);
+                context.fillRect(inimigoPosicaoX, canvas.height - barraAltura, barraLargura, barraAltura);
                 context.beginPath();
                 context.arc(bolaPosX, bolaPosY, bolaDiametro, 0, Math.PI * 2, true);
                 context.fill();
@@ -101,11 +121,20 @@
                     pontosJogador++;
                     colisao = true;
                 }
+                if ((bolaPosX > inimigoPosicaoX && bolaPosX < inimigoPosicaoX + barraLargura) && bolaPosY >= canvas.height - barraAltura && colisao == false) {
+                    pontosJogador++;
+                    colisao = true;
+                }
                 context.font = "32pt Tahoma";
                 context.fillText(pontosJogador, canvas.width - 70, 50);
-            }
-                function continua() {
-                
+                context.font = "20pt Tahoma";
+                context.fillText("Angulo: " + alfa, canvas.width - 300, 100);
+                context.font = "20pt Tahoma";
+                context.fillText("Seno: " + Math.sin(alfa), canvas.width - 300, 130);
+                context.font = "20pt Tahoma";
+                context.fillText("VelocidadeX: " + velocidadeBolaX, canvas.width - 300, 160);
+                context.font = "20pt Tahoma";
+                context.fillText("VelocidadeY: " + velocidadeBolaY, canvas.width - 300, 190);
             }
             
         </script>
