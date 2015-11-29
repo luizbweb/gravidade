@@ -92,14 +92,14 @@
             // 38 - UP; 40 - Down; 37 - Left; 39 - Right - 13 - Enter;
             function keyDown(e) {
                 // Movimento da Plataforma
-                 if(e.keyCode == 37) {
+                 if(e.keyCode == 65) {
                     if (jogadorPosicaoX > 0) {
                         jogadorPosicaoX -= velocidadeJogador;
                         bolaPosX = jogadorPosicaoX + 75;
                     }
                 }
                 
-                if(e.keyCode == 39) {
+                if(e.keyCode == 68) {
                     if (jogadorPosicaoX < ((canvas.width /2) - 295)) {
                         jogadorPosicaoX += velocidadeJogador;
                         bolaPosX = jogadorPosicaoX + 75;
@@ -107,7 +107,7 @@
                 }
                 
                 // Mudança do angulo
-                if(e.keyCode == 38) {
+                if(e.keyCode == 87) {
                     if ( alfa < 1.57) {
                         alfa += Math.PI/180;
                         velocidadeBolaX = (Math.cos(alfa) * velocidadeBola);
@@ -115,7 +115,7 @@
                     }
                 }
                 
-                if(e.keyCode == 40) {
+                if(e.keyCode == 83) {
                     if ( alfa > 0.1 ) {
                         alfa -= Math.PI/180;
                         velocidadeBolaX = (Math.cos(alfa) * velocidadeBola);
@@ -123,7 +123,7 @@
                     }
                 }
                 // Fogo!!!
-                if(e.keyCode == 13) {
+                if(e.keyCode == 32) {
                     t = 1;
                     bolaPosX = jogadorPosicaoX + 75;
                     bolaPosY = 320;
@@ -134,21 +134,21 @@
                 // 65 - A; 87 - W; 68 - D; 83 - S; 32 - Space;
                 
                 // Movimento da Plataforma
-                if(e.keyCode == 65) {
+                if(e.keyCode == 37) {
                     if (inimigoPosicaoX > ((canvas.width/2) + 200)) {
                         inimigoPosicaoX -= velocidadeJogador;
                         bolaPosX2 = inimigoPosicaoX + 15;
                     }
                 }
                 
-                if(e.keyCode == 68) {
+                if(e.keyCode == 39) {
                     if (inimigoPosicaoX < (canvas.width - barraLargura)) {
                         inimigoPosicaoX += velocidadeJogador;
                         bolaPosX2 = inimigoPosicaoX + 15;
                     }
                 }
                 // Mudanças de Angulo
-                 if(e.keyCode == 87) {
+                 if(e.keyCode == 38) {
                     if ( alfa2 < 1.57) {
                         alfa2 += Math.PI/180;
                         velocidadeBolaX2 = (Math.cos(alfa2) * velocidadeBola2);
@@ -156,7 +156,7 @@
                     }
                 }
                 
-                if(e.keyCode == 83) {
+                if(e.keyCode == 40) {
                     if ( alfa2 > 0.1 ) {
                         alfa2 -= Math.PI/180;
                         velocidadeBolaX2 = (Math.cos(alfa2) * velocidadeBola2);
@@ -164,7 +164,7 @@
                     }
                 }
                 // Fogo!!!
-                if(e.keyCode == 32) {
+                if(e.keyCode == 13) {
                     
                     t2 = 1;
                     bolaPosX2 = inimigoPosicaoX + 15;
@@ -278,7 +278,7 @@
                 context.fillText("VelocidadeY: " + velocidadeBolaY2, canvas.width - 250, 190);
                 
                 context.fillRect((canvas.width/2 - 5), 270, 10, 160 );
-                // context.drawImage(ice, 335 , 260);
+                context.drawImage(ice, 335 , 260);
                 context.drawImage(canhao, jogadorPosicaoX, 305);
                 context.drawImage(canhao2, inimigoPosicaoX, 305);
                 
